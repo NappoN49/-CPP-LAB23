@@ -20,20 +20,73 @@ string toUpperStr(string x){
     return y;
 }
 
-void importDataFromFile(){
-
+void importDataFromFile(string filename,vector<string> &names,vector<int> &scores,vector<char> &grades){
+    ifstream user_file(filename);
+    string line;
+    while(getline(user_file,line)){
+        const char*text=line.c_str();
+        char format[]="%[^:]: %d %d %d";
+        char username[100];
+        string realusername;
+        int userscore[3],usergrade,userallscore;
+        sscanf(text,format,username,&userscore[0],&userscore[1],&userscore[2]);
+        realusername=username;
+        userallscore=(userscore[0]+userscore[1]+userscore[2]);
+        usergrade=score2grade(userallscore);
+        names.push_back(realusername);
+        scores.push_back(userallscore);
+        grades.push_back(usergrade);
+    }
+    user_file.close();
+    return;
 }
 
-void getCommand(){
-
+void getCommand(string &command,string &key){
+    cout<<"Please input your command:\n";
+    string line;
+    getline(cin,line);
+    const char*input=line.c_str();
+    char format[]="%s %s";
+    char comm[100],keyy[100];
+    sscanf(input,format,comm,keyy);
+    command=comm;
+    line.erase(0,command.size()+1);
+    key=line;
+    return;
 }
 
-void searchName(){
-
+void searchName(vector<string> names,vector<int> scores,vector<char> grades,string key){
+    bool check=false;
+    for(unsigned int i=0;i<names.size();i++){
+        if(toUpperStr(names[i])==key){
+            cout << "---------------------------------\n";
+            cout<<names[i]<<"'s score = "<<scores[i]<<"\n";
+            cout<<names[i]<<"'s grade = "<<grades[i]<<"\n";
+            cout << "---------------------------------\n";
+            check=true;
+            break;
+        }
+    }
+    if(!check){
+        cout<<"---------------------------------\n";
+        cout<<"Cannot found.\n";
+        cout<<"---------------------------------\n";
+    }
+    return;
 }
 
-void searchGrade(){
-
+void searchGrade(vector<string> names,vector<int> scores,vector<char> grades,string key){
+    bool check=false;
+    cout<<"---------------------------------\n";
+    for(unsigned int i=0;i<grades.size();i++){
+        if(toupper(grades[i])==key[0]){
+            cout<<names[i]<<" ("<<scores[i]<<")\n";
+            check=true;
+        }
+    }
+    if(!check) cout<<"Cannot found.\n";
+    cout<<"---------------------------------\n";
+    return;
 }
 
 
